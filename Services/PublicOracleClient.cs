@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Net.Sockets;
 using CITADEL_NEXUS_PUBLIC.Models;
 using Microsoft.Extensions.Options;
 
@@ -82,12 +83,28 @@ public sealed class PublicOracleClient(HttpClient httpClient, IOptions<PublicOra
             return false;
         }
 
+        if (!string.IsNullOrWhiteSpace(parsed.UserInfo))
+        {
+            return false;
+        }
+
         if (parsed.IsLoopback || parsed.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase) || parsed.Host.EndsWith(".internal", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        if (IPAddress.TryParse(parsed.Host, out var ip) && (IPAddress.IsLoopback(ip) || IsPrivateIp(ip)))
+        var blockedTlds = new[] { ".local", ".intranet", ".corp" };
+        if (blockedTlds.Any(tld => parsed.Host.EndsWith(tld, StringComparison.OrdinalIgnoreCase)))
+        {
+            return false;
+        }
+
+        if (IPAddress.TryParse(parsed.Host, out _))
+        {
+            return false;
+        }
+
+        if (IPAddress.TryParse(parsed.DnsSafeHost, out var ip) && (IPAddress.IsLoopback(ip) || IsPrivateIp(ip)))
         {
             return false;
         }
@@ -98,12 +115,27 @@ public sealed class PublicOracleClient(HttpClient httpClient, IOptions<PublicOra
 
     private static bool IsPrivateIp(IPAddress ip)
     {
+        if (ip.AddressFamily == AddressFamily.InterNetworkV6)
+        {
+            return ip.IsIPv6LinkLocal ||
+                   ip.IsIPv6SiteLocal ||
+                   ip.IsIPv6Multicast ||
+                   ip.Equals(IPAddress.IPv6Loopback) ||
+                   ip.Equals(IPAddress.IPv6None) ||
+                   (ip.GetAddressBytes()[0] & 0xFE) == 0xFC;
+        }
+
         var bytes = ip.GetAddressBytes();
         return bytes.Length switch
         {
-            4 => bytes[0] == 10 ||
+            4 => bytes[0] == 0 ||
+                 bytes[0] == 10 ||
+                 bytes[0] == 127 ||
                  (bytes[0] == 172 && bytes[1] >= 16 && bytes[1] <= 31) ||
-                 (bytes[0] == 192 && bytes[1] == 168),
+                 (bytes[0] == 192 && bytes[1] == 168) ||
+                 (bytes[0] == 169 && bytes[1] == 254) ||
+                 (bytes[0] == 100 && bytes[1] >= 64 && bytes[1] <= 127) ||
+                 (bytes[0] == 198 && (bytes[1] == 18 || bytes[1] == 19)),
             _ => false
         };
     }

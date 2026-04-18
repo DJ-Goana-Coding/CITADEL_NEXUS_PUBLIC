@@ -28,11 +28,28 @@ public sealed class SanityFilterService
             return (false, "Message exceeds the 300 character public limit.");
         }
 
-        if (BlockedTerms.Any(term => prompt.Contains(term, StringComparison.OrdinalIgnoreCase)))
+        var normalized = Normalize(prompt);
+        if (BlockedTerms.Any(term => normalized.Contains(Normalize(term), StringComparison.OrdinalIgnoreCase)))
         {
             return (false, "Message blocked by sanity filter policy.");
         }
 
         return (true, "Accepted");
+    }
+
+    private static string Normalize(string input)
+    {
+        return new string(
+            input
+                .ToLowerInvariant()
+                .Replace('1', 'i')
+                .Replace('3', 'e')
+                .Replace('4', 'a')
+                .Replace('5', 's')
+                .Replace('0', 'o')
+                .Replace('!', 'i')
+                .Replace('@', 'a')
+                .Where(char.IsLetterOrDigit)
+                .ToArray());
     }
 }

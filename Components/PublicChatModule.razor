@@ -43,7 +43,7 @@
                 <MudTimelineItem Color="Color.Primary" Variant="Variant.Text">
                     <ItemContent>
                         <MudPaper Class="pa-3 panel-dark" Elevation="0">
-                            <MudText Typo="Typo.caption">@message.Timestamp.ToLocalTime().ToString("u")</MudText>
+                            <MudText Typo="Typo.caption">@message.Timestamp.ToLocalTime().ToString("g")</MudText>
                             <MudText Typo="Typo.body2"><b>Prompt:</b> @message.Prompt</MudText>
                             <MudText Typo="Typo.body2"><b>Oracle:</b> @message.Response</MudText>
                         </MudPaper>
