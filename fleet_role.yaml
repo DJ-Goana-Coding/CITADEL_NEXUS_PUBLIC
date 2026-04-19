@@ -1,0 +1,39 @@
+# Citadel Omega Mesh — Fleet Role Manifest
+# This file declares the identity of this repository within the
+# DJ-Goana-Coding 12-repo Spoke-and-Wheel fleet so it can be indexed
+# by the Librarian node.
+
+repo: CITADEL_NEXUS_PUBLIC
+owner: DJ-Goana-Coding
+role: Public Gateway
+description: >-
+  Public-facing facade and Documentation Hub for the Citadel Omega Mesh.
+  Hosts public references, status surfaces, and high-level architectural
+  documentation. Does not host private worker logic, secrets, or tunnels.
+
+visibility: public
+stability: 9293
+
+master_hub:
+  name: Mapping-and-Inventory
+  repo: DJ-Goana-Coding/Mapping-and-Inventory
+  url: https://github.com/DJ-Goana-Coding/Mapping-and-Inventory
+  artifacts:
+    - Global Mesh Map
+    - Spoke Registry
+    - Master Inventory Ledger
+
+command_face:
+  name: Vercel HUD
+  url: https://citadel-nexus-private.vercel.app
+
+responsibilities:
+  - Serve as the public-facing documentation hub for the fleet.
+  - Expose a stable identity that the Librarian can index.
+  - Point operators and downstream nodes to the Master Hub for the
+    authoritative Mesh Map, Spoke Registry, and Inventory Ledger.
+
+non_responsibilities:
+  - No FastAPI application is hosted here (yet).
+  - No worker_bridge / worker_reporter logic.
+  - No secrets, tokens, or tunnel credentials.
