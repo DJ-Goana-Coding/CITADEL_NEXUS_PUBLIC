@@ -1,0 +1,37 @@
+@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="_sovereignTheme" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="0" Dense="true" Class="sovereign-appbar">
+        <MudText Typo="Typo.h6" Class="fw-bold">CITADEL NEXUS PUBLIC FRONTIER</MudText>
+        <MudSpacer />
+        <MudButton Variant="Variant.Text" Color="Color.Inherit" Href="/">Architecture</MudButton>
+        <MudButton Variant="Variant.Text" Color="Color.Inherit" Href="/showcase">Showcase</MudButton>
+    </MudAppBar>
+
+    <MudMainContent Class="citadel-main">
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private readonly MudTheme _sovereignTheme = new()
+    {
+        PaletteLight = new PaletteLight
+        {
+            Primary = "#C9A227",
+            Secondary = "#FFFFFF",
+            Background = "#0D0D0D",
+            Surface = "#111111",
+            AppbarBackground = "#000000",
+            AppbarText = "#F5F5F5",
+            TextPrimary = "#FAFAFA",
+            TextSecondary = "#E0E0E0",
+            ActionDefault = "#C9A227"
+        }
+    };
+}

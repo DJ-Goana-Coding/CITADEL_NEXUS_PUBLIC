@@ -1,0 +1,107 @@
+@using CITADEL_NEXUS_PUBLIC.Services
+@inject PublicOracleClient OracleClient
+@inject SanityFilterService SanityFilter
+
+<MudPaper Class="pa-6 border-sovereign" Elevation="0">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-4">
+        <MudText Typo="Typo.h5">Public Chat Module</MudText>
+        <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined">Restricted</MudChip>
+    </MudStack>
+
+    <MudText Typo="Typo.body2" Class="mb-3">
+        Messages pass through a sanity filter before transmission to the configured Public Oracle endpoint.
+    </MudText>
+
+    @if (!_ready)
+    {
+        <MudAlert Severity="Severity.Warning" Dense="true" Variant="Variant.Outlined">
+            Public Oracle endpoint or public API key is not configured.
+        </MudAlert>
+    }
+
+    <MudCheckBox @bind-Value="_acceptedRules" Color="Color.Primary" Label="I accept the public channel policy and restricted usage rules." Class="mb-3" />
+
+    <MudTextField T="string" @bind-Value="_prompt" Label="Message" Variant="Variant.Outlined" FullWidth="true" Lines="4" />
+
+    <MudStack Row="true" Spacing="2" Class="mt-3">
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" Disabled="@(!_acceptedRules || !_ready || _busy)" OnClick="SendAsync">
+            @_sendLabel
+        </MudButton>
+        <MudButton Color="Color.Secondary" Variant="Variant.Outlined" Disabled="_busy" OnClick="Clear">Clear</MudButton>
+    </MudStack>
+
+    @if (!string.IsNullOrWhiteSpace(_status))
+    {
+        <MudAlert Severity="@_statusSeverity" Dense="true" Variant="Variant.Outlined" Class="mt-4">@_status</MudAlert>
+    }
+
+    @if (_messages.Count > 0)
+    {
+        <MudTimeline Class="mt-4">
+            @foreach (var message in _messages)
+            {
+                <MudTimelineItem Color="Color.Primary" Variant="Variant.Text">
+                    <ItemContent>
+                        <MudPaper Class="pa-3 panel-dark" Elevation="0">
+                            <MudText Typo="Typo.caption">@message.Timestamp.ToLocalTime().ToString("g")</MudText>
+                            <MudText Typo="Typo.body2"><b>Prompt:</b> @message.Prompt</MudText>
+                            <MudText Typo="Typo.body2"><b>Oracle:</b> @message.Response</MudText>
+                        </MudPaper>
+                    </ItemContent>
+                </MudTimelineItem>
+            }
+        </MudTimeline>
+    }
+</MudPaper>
+
+@code {
+    private readonly List<ChatRecord> _messages = [];
+    private bool _acceptedRules;
+    private bool _busy;
+    private bool _ready;
+    private string _prompt = string.Empty;
+    private string _status = string.Empty;
+    private Severity _statusSeverity = Severity.Info;
+    private string _sendLabel = "Send to Public Oracle";
+
+    protected override void OnInitialized()
+    {
+        _ready = OracleClient.IsConfigured();
+    }
+
+    private async Task SendAsync()
+    {
+        var trimmedPrompt = _prompt.Trim();
+        var sanity = SanityFilter.Validate(trimmedPrompt);
+        if (!sanity.IsAllowed)
+        {
+            _statusSeverity = Severity.Warning;
+            _status = sanity.Reason;
+            return;
+        }
+
+        _busy = true;
+        _sendLabel = "Transmitting...";
+
+        var result = await OracleClient.SendAsync(trimmedPrompt);
+        _statusSeverity = result.Success ? Severity.Success : Severity.Error;
+        _status = result.Message;
+
+        if (result.Success)
+        {
+            _messages.Insert(0, new ChatRecord(DateTimeOffset.UtcNow, trimmedPrompt, result.Message));
+            _prompt = string.Empty;
+        }
+
+        _busy = false;
+        _sendLabel = "Send to Public Oracle";
+    }
+
+    private void Clear()
+    {
+        _prompt = string.Empty;
+        _status = string.Empty;
+    }
+
+    private sealed record ChatRecord(DateTimeOffset Timestamp, string Prompt, string Response);
+}

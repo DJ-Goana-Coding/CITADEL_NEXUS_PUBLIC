@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#171717"/>
+      <stop offset="100%" stop-color="#4b1f00"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#g3)"/>
+  <text x="80" y="360" fill="#C9A227" font-family="Segoe UI, Arial" font-size="64">Adobe Pipeline Intake</text>
+</svg>

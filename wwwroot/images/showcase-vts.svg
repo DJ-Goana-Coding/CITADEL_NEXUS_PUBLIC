@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#121212"/>
+      <stop offset="100%" stop-color="#003244"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#g2)"/>
+  <text x="80" y="360" fill="#C9A227" font-family="Segoe UI, Arial" font-size="64">VTS Signal Layers</text>
+</svg>

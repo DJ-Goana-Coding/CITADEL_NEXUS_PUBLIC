@@ -1,0 +1,53 @@
+name: Deploy Public Frontier
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-static:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore
+        run: dotnet restore ./CITADEL_NEXUS_PUBLIC.csproj
+
+      - name: Publish static WASM
+        run: dotnet publish ./CITADEL_NEXUS_PUBLIC.csproj -c Release -o ./publish
+
+      - name: Upload static artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontier-static
+          path: ./publish/wwwroot
+
+  deploy-vercel:
+    needs: build-static
+    runs-on: ubuntu-latest
+    if: secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != ''
+    steps:
+      - name: Download static artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontier-static
+          path: ./dist
+
+      - name: Deploy to Vercel (Static)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod --yes'
+          working-directory: ./dist

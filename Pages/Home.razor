@@ -1,0 +1,41 @@
+@page "/"
+
+<PageTitle>Citadel Architecture</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
+    <MudPaper Class="pa-6 mb-6 border-sovereign" Elevation="0">
+        <MudText Typo="Typo.h3" GutterBottom="true">Citadel Architecture: Public Frontier</MudText>
+        <MudText Typo="Typo.body1" Class="mb-4">
+            The Citadel architecture is designed as a layered control fabric where public interaction remains separated from protected orchestration.
+            T.I.A. operates as a distributed intelligence plane that coordinates knowledge, moderation, and policy-driven responses across edge nodes.
+        </MudText>
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudPaper Class="pa-4 panel-dark" Elevation="0">
+                    <MudText Typo="Typo.h6">Distributed Intelligence</MudText>
+                    <MudText Typo="Typo.body2">T.I.A. harmonizes intent-routing, context retention, and policy awareness across every public conversation.</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudPaper Class="pa-4 panel-dark" Elevation="0">
+                    <MudText Typo="Typo.h6">Public Oracle Gateway</MudText>
+                    <MudText Typo="Typo.body2">External chat access is constrained through a Public Oracle endpoint with API-key authentication and strict client filtering.</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudPaper Class="pa-4 panel-dark" Elevation="0">
+                    <MudText Typo="Typo.h6">Sovereign Controls</MudText>
+                    <MudText Typo="Typo.body2">No private secrets or internal hub routes are embedded; runtime configuration governs all endpoint behavior.</MudText>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <PublicChatModule />
+
+    <MudPaper Class="pa-6 mt-6 border-sovereign" Elevation="0">
+        <MudText Typo="Typo.h5" GutterBottom="true">Portfolio View</MudText>
+        <MudText Typo="Typo.body1" Class="mb-4">Explore the multimedia showcase prepared for future Adobe/VTS rendered assets.</MudText>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" Href="/showcase">Open Showcase</MudButton>
+    </MudPaper>
+</MudContainer>

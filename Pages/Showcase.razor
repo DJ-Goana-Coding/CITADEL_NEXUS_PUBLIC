@@ -1,0 +1,40 @@
+@page "/showcase"
+
+<PageTitle>Frontier Showcase</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
+    <MudPaper Class="pa-6 mb-6 border-sovereign" Elevation="0">
+        <MudText Typo="Typo.h3" GutterBottom="true">Frontier Showcase</MudText>
+        <MudText Typo="Typo.body1">A premium multimedia staging area for upcoming Adobe and VTS visual assets.</MudText>
+    </MudPaper>
+
+    <MudGrid>
+        <MudItem xs="12" md="4">
+            <MudCard Class="showcase-card">
+                <MudCardMedia Image="images/showcase-command.svg" Height="220" />
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">Command Visual Narratives</MudText>
+                    <MudText Typo="Typo.body2">Executive-ready storyboards, overlays, and render-ready scene sequencing.</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <MudCard Class="showcase-card">
+                <MudCardMedia Image="images/showcase-vts.svg" Height="220" />
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">VTS Signal Layers</MudText>
+                    <MudText Typo="Typo.body2">Motion-ready panels prepared for telemetry synchronization and immersive stage output.</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <MudCard Class="showcase-card">
+                <MudCardMedia Image="images/showcase-adobe.svg" Height="220" />
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">Adobe Pipeline Intake</MudText>
+                    <MudText Typo="Typo.body2">Asset placeholders for future AI-assisted compositing and publication workflows.</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

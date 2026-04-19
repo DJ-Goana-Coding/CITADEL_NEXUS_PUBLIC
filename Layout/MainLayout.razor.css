@@ -1,0 +1,9 @@
+.citadel-main {
+    min-height: 100vh;
+    background: radial-gradient(circle at top right, rgba(201, 162, 39, 0.2), transparent 40%), #0b0b0b;
+    color: #f8f8f8;
+}
+
+.sovereign-appbar {
+    border-bottom: 1px solid rgba(201, 162, 39, 0.45);
+}
